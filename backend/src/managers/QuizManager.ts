@@ -8,6 +8,7 @@ export class QuizManager {
         this.quizes = [];
     }
 
+    // No usage
     public start(roomId: string) {
         const quiz = this.getQuiz(roomId);
         if (!quiz) {

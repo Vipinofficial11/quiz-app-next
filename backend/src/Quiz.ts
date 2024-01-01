@@ -101,17 +101,17 @@ export class Quiz {
             // })
         }
     }
-    genRandonString(length: number) {
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()';
-        var charLength = chars.length;
-        var result = '';
-        for ( var i = 0; i < length; i++ ) {
+    getRandomString(length: number) {
+        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()';
+        let charLength = chars.length;
+        let result = '';
+        for ( let i = 0; i < length; i++ ) {
            result += chars.charAt(Math.floor(Math.random() * charLength));
         }
         return result;
      }
     addUser(name: string) {
-        const id = this.genRandonString(7);
+        const id = this.getRandomString(7);
         this.users.push({
             id,
             name,
@@ -132,7 +132,7 @@ export class Quiz {
         const existingSubmission = problem.submissions.find(x => x.userId === userId);
  
         if (existingSubmission) {
-            console.log("existn submissions")
+            console.log("existing submissions")
             return;
         }
  
