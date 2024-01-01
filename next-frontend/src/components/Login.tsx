@@ -6,7 +6,7 @@ import LeaderBoard from "./Leaderboard";
 
 export default function Login() {
   const [code, setCode] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   if (!isSubmitted) {
@@ -42,7 +42,7 @@ export default function Login() {
                   type="text"
                   placeholder="Alex"
                   required
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2 md:px-3"
                 />
               </div>
@@ -73,16 +73,16 @@ export default function Login() {
     );
   }
 
-  return <User code={code} userName={userName} />;
+  return <User code={code} name={name} />;
 }
 
 // Props for the User
 interface UserProps {
   code: string;
-  userName: string;
+  name: string;
 }
 
-export const User = ({ code, userName }: UserProps) => {
+export const User = ({ code, name }: UserProps) => {
   const [socket, setSocket] = useState<null | any>(null);
   const roomId = code;
   const [quizCurrentState, setQuizCurrentState] = useState("not_started");
@@ -99,12 +99,12 @@ export const User = ({ code, userName }: UserProps) => {
     socket.on("connect", () => {
       console.log("Connection Socket ID - ", socket.id);
       // Emitting the ID provided by the user and its name.
-      socket.emit("join", { roomId, userName });
+      socket.emit("join", { roomId, name });
     });
 
     // Getting emitted from backend once a user joins
     socket.on("init", ({ userId, state }) => {
-      console.log("STATE: ", state);
+      console.log("STATE: ", state.type);
       setUserId(userId);
 
       if (state.leaderboard) {
@@ -122,7 +122,9 @@ export const User = ({ code, userName }: UserProps) => {
       setQuizCurrentState("leaderboard");
       setLeaderboard(data.leaderboard);
     });
+    // changed problem -> createProblem
     socket.on("problem", (data) => {
+      console.log("Problem is created an I am debugging ");
       setQuizCurrentState("question");
       setCurrentQuestion(data.problem);
     });

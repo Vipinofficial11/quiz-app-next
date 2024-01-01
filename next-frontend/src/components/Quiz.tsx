@@ -1,87 +1,103 @@
 "use client";
-import { RadioGroup } from "@headlessui/react";
 import { useState } from "react";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+/**
+ Simple View with title and answers - $25
+    title : string
+    choices: strings[]
+    image?: string
+ */
 
-// Component Abouts - Simple Question and Options Page
 export default function Quiz({
-  roomId,
-  userId,
-  problemId,
   quizData,
   socket,
+  userId,
+  problemId,
+  roomId,
 }: {
+  quizData: {
+    title: string;
+    options: string[];
+  };
+  socket: any;
   roomId: string;
   userId: string;
   problemId: string;
-  quizData: { title: string; options: string[] };
-  socket: any;
 }) {
-  const [selected, setSelected] = useState(quizData.options[0]);
+  const [submitted, setSubmitted] = useState(false);
+  const [submission, setSubmission] = useState(0);
+
   return (
-    <>
-      <div className="mb-5 mt-5">
-        <label className="text-base font-semibold text-gray-900">
-          {quizData.title}
-        </label>
-        <p className="text-sm text-gray-500">
-          Select any one of the following options.
-        </p>
-      </div>
-      <RadioGroup value={selected} onChange={setSelected}>
-        <RadioGroup.Label className="sr-only">Privacy setting</RadioGroup.Label>
-        <div className="-space-y-px rounded-md bg-white">
-          {quizData.options.map((setting, settingIdx) => (
-            <RadioGroup.Option
-              key={settingIdx}
-              value={setting}
-              className={({ checked }) =>
-                classNames(
-                  settingIdx === 0 ? "rounded-tl-md rounded-tr-md" : "",
-                  settingIdx === quizData.options.length - 1
-                    ? "rounded-bl-md rounded-br-md"
-                    : "",
-                  checked
-                    ? "z-10 border-gray-200 bg-gray-50"
-                    : "border-gray-200",
-                  "relative flex cursor-pointer border p-4 focus:outline-none"
-                )
-              }
+    <div className="h-screen">
+      <div className="flex w-full justify-center">
+        <div className="">
+          <SingleQuiz
+            choices={quizData.options.map((x) => x.title)}
+            title={quizData.title}
+            imageURL={""}
+            setSelected={setSubmission}
+          />
+          <div className="flex justify-between w-full mt-4 text-white">
+            <button
+              className="py-3 px-10 bg-indigo-600 rounded-lg mx-8"
+              disabled={submitted}
+              onClick={() => {
+                setSubmitted(true);
+                socket.emit("submit", {
+                  userId,
+                  problemId,
+                  submission: Number(submission),
+                  roomId,
+                });
+              }}
             >
-              {({ active, checked }) => (
-                <>
-                  <span
-                    className={classNames(
-                      checked
-                        ? "bg-gray-600 border-transparent"
-                        : "bg-white border-gray-300",
-                      active ? "ring-2 ring-offset-2 ring-gray-600" : "",
-                      "mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center"
-                    )}
-                    aria-hidden="true"
-                  >
-                    <span className="rounded-full bg-white w-1.5 h-1.5" />
-                  </span>
-                  <span className="ml-3 flex flex-col">
-                    <RadioGroup.Description
-                      as="span"
-                      className={classNames(
-                        checked ? "text-gray-700" : "text-gray-500",
-                        "block text-sm"
-                      )}
-                    >
-                      {setting}
-                    </RadioGroup.Description>
-                  </span>
-                </>
-              )}
-            </RadioGroup.Option>
-          ))}
+              Submit
+            </button>
+          </div>
         </div>
-      </RadioGroup>
-    </>
+      </div>
+    </div>
+  );
+}
+
+type SingleQuizProps = {
+  title: string;
+  choices: string[];
+  imageURL?: string;
+  setSelected: any;
+};
+function SingleQuiz({
+  title,
+  choices,
+  imageURL,
+  setSelected,
+}: SingleQuizProps) {
+  return (
+    <article>
+      <h4 className="mt-10 text-xl">Question</h4>
+      <div className="mt-4 text-2x">{title}</div>
+      {imageURL && <img src={imageURL} alt="" />}
+      {choices.length &&
+        choices.map((choice, index) => {
+          return (
+            <div
+              key={index}
+              className="flex items-center w-full py-4 pl-5 m-2 ml-0 space-x-2 border-2 cursor-pointer border-white/10 rounded-xl bg-white/5"
+            >
+              <input
+                type="radio"
+                name="option"
+                value={choice}
+                className="w-6 h-6 bg-black"
+                onClick={() => {
+                  setSelected(index);
+                }}
+              />
+              <p className="ml-6 ">{choice}</p>
+            </div>
+          );
+        })}
+      <div className="flex flex-col items-start w-full"></div>
+    </article>
   );
 }

@@ -18,6 +18,12 @@ export class UserManager {
   private createHandlers(socket: Socket) {
     socket.on("join", (data) => {
       const userId = this.quizManager.addUser(data.roomId, data.name);
+
+      console.log(
+        "Once Joined checking the state: " +
+          this.quizManager.getCurrentState(data.roomId)
+      );
+
       socket.emit("init", {
         userId,
         state: this.quizManager.getCurrentState(data.roomId),
@@ -36,11 +42,13 @@ export class UserManager {
       });
 
       socket.on("createProblem", (data) => {
-        console.log("Creating a problem with room id:", data.roomId);
+        console.log("Problem Added", data.problem);
+
         this.quizManager.addProblem(data.roomId, data.problem);
       });
 
       socket.on("next", (data) => {
+        console.log("next clicked");
         this.quizManager.next(data.roomId);
       });
     });

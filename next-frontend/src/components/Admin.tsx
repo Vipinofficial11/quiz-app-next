@@ -83,8 +83,8 @@ export default function Admin() {
   // Give Admin Controls and Problem Creation Authority
   return (
     <div>
-      <CreateQuizProblem quizId={quizId} socket={socket} />
-      <QuizControl roomId={roomId} socket={socket} />
+      <CreateQuizProblem roomId={quizId} socket={socket} />
+      <QuizControl socket={socket} roomId={roomId} />
     </div>
   );
 }
