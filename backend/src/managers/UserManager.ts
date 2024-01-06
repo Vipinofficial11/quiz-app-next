@@ -48,7 +48,6 @@ export class UserManager {
       });
 
       socket.on("next", (data) => {
-        console.log("next clicked");
         this.quizManager.next(data.roomId);
       });
     });
