@@ -1,7 +1,7 @@
 import { IoManager } from "./managers/IoManager";
 
 export type AllowedSubmissions = 0 | 1 | 2 | 3;
-const PROBLEM_TIME_S = 20;
+const PROBLEM_TIME_S = 1500;
 
 interface User {
   name: string;
@@ -49,13 +49,14 @@ export class Quiz {
       this.debug();
     }, 10000);
   }
+
   debug() {
     console.log("----INFO---");
     console.log("ROOM ID - ", this.roomId);
     console.log("PROBLEMS - ", JSON.stringify(this.problems));
     console.log("USERS - ", this.users);
     console.log("QUIZ STATE- ", this.currentState);
-    console.log("PROBLEM COUNt - ", this.activeProblem);
+    console.log("PROBLEM COUNT - ", this.activeProblem);
     console.log("----INFO---");
   }
   addProblem(problem: Problem) {
@@ -65,6 +66,11 @@ export class Quiz {
   start() {
     this.hasStarted = true;
     this.setActiveProblem(this.problems[0]);
+  }
+
+  clear() {
+    this.users = [];
+    this.problems = [];
   }
 
   setActiveProblem(problem: Problem) {

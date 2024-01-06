@@ -11,7 +11,7 @@ export default function Login() {
 
   if (!isSubmitted) {
     return (
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-r from-[#e4b580] to-[#e8729e]">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Enter the code to join
@@ -51,7 +51,7 @@ export default function Login() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-yellow-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+                className="flex w-full justify-center rounded-md bg-[#5e4644] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#7f6867] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#382e2d]"
                 onClick={() => setIsSubmitted(true)}
               >
                 Join room
@@ -62,8 +62,8 @@ export default function Login() {
           <p className="mt-10 text-center text-sm text-gray-500">
             Login as admin?
             <a
-              href="#"
-              className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
+              href="/admin"
+              className="font-semibold leading-6 text-[#555] hover:text-[#c9b9b9]"
             >
               Click here
             </a>
@@ -104,7 +104,6 @@ export const User = ({ code, name }: UserProps) => {
 
     // Getting emitted from backend once a user joins
     socket.on("init", ({ userId, state }) => {
-      console.log("STATE: ", state.type);
       setUserId(userId);
 
       if (state.leaderboard) {
@@ -145,7 +144,8 @@ export const User = ({ code, name }: UserProps) => {
         userId={userId}
         problemId={currentQuestion.id}
         quizData={{
-          title: currentQuestion.description,
+          title: currentQuestion.title,
+          description: currentQuestion.description,
           options: currentQuestion.options,
         }}
         socket={socket}
